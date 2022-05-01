@@ -8,18 +8,25 @@ int main(int argc, char **argv) {
   init();
   const int dhtPin = 12;
   const int rs = 11, en = 10, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+  char buffer[20];
 
   DHT dht(dhtPin, DHT11);
   LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
   dht.begin();
-
+  
+  
   for(;;) {
+    lcd.clear();
     float humidity = dht.readHumidity();
     float temp = dht.readTemperature(true);
+    snprintf(buffer, sizeof(buffer), "Humidity: %d", (int)humidity);
 
-    Serial.print("Humidity:\t"); Serial.println(humidity);
-    Serial.print("Temperature:\t"); Serial.println(temp);
+    lcd.begin(16, 2);
+    lcd.print(buffer);
+    snprintf(buffer, sizeof(buffer), "Temperature: %d", (int)temp);
+    lcd.setCursor(0,1);
+    lcd.print(buffer);
     delay(5000);
   }
 
